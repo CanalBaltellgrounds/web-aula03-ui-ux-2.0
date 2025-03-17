@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carros de Luxo</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Estilos para os botões */
+        .btn-container {
+            margin-top: 20px;
+        }
+
+        .btn-container button {
+            background-color: #e60000;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-container button:hover {
+            background-color: #ff4500;
+        }
+
+        /* Estilos para a exibição em lista */
+        .lista-produtos {
+            display: none; /* Inicialmente oculto */
+            list-style-type: none;
+            padding: 0;
+            max-width: 800px;
+            margin: 20px auto;
+        }
+
+        .lista-produtos li {
+            background: #222;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: 1px solid #e60000;
+            font-size: 1.2em;
+            box-shadow: 0 0 10px rgba(230, 0, 0, 0.5);
+            transition: transform 0.3s ease;
+        }
+
+        .lista-produtos li:hover {
+            transform: scale(1.05);
+        }
+
+        /* Estilos para a exibição em cards */
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: #1a1a1a;
+            border-radius: 10px;
+            overflow: hidden;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #333;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(255, 69, 0, 0.3);
+        }
+
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 2px solid #ff4500;
+        }
+
+        .card h3 {
+            margin: 20px 0;
+            font-size: 1.8rem;
+            color: #ff4500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card p {
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            color: #fff;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Carros de Luxo</h1>
+        <div class="btn-container">
+            <button onclick="exibirCards()">Exibir em Cards</button>
+            <button onclick="exibirLista()">Exibir em Lista</button>
+        </div>
+    </header>
+    <main>
+        <!-- Exibição em Cards -->
+        <div class="container" id="cards-container">
+            <!-- Cards serão renderizados aqui via JavaScript -->
+        </div>
+
+        <!-- Exibição em Lista -->
+        <ul class="lista-produtos" id="lista-produtos">
+            <!-- Lista será renderizada aqui via JavaScript -->
+        </ul>
+    </main>
+    <footer>
+        <p>&copy; 2025 Loja de Carros de Luxo</p>
+    </footer>
+
+    <script>
+        // Dados dos carros de luxo
+        const produtos = [
+            {
+                "id": 1,
+                "nome": "Ferrari 488 GTB",
+                "descricao": "Esportivo italiano com motor V8",
+                "preco": 1200000.0,
+                "imagem": "https://imgs.search.brave.com/nxc2O3MGh7UgjTDqdCkI56PW4N-b061J0uOj7hqM2d4/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWdk/LmFlcGxjZG4uY29t/LzY2NHgzNzQvY3cv/ZWMvMjExMDEvRmVy/cmFyaS00ODgtUmln/aHQtRnJvbnQtVGhy/ZWUtUXVhcnRlci02/MTk5Ny5qcGc_d209/MCZ0PTE2MzMwNjQ2/NyZ0PTE2MzMwNjQ2/NyZxPTgw"
+            },
+            {
+                "id": 2,
+                "nome": "Lamborghini Aventador",
+                "descricao": "Supercarro com design agressivo",
+                "preco": 2500000.0,
+                "imagem": "https://imgs.search.brave.com/x854yrgTQQI3dV-JjnhHS1IEtCSZ_-XoHv7Pksb5lrw/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9odHRw/Mi5tbHN0YXRpYy5j/b20vRF9OUV82OTUy/NDEtTUxBODAxMjM2/NzczMzBfMTEyMDI0/LVYud2VicA"
+            },
+            {
+                "id": 3,
+                "nome": "Porsche 911 Turbo S",
+                "descricao": "Esportivo alemão de alta performance",
+                "preco": 900000.0,
+                "imagem": "https://imgs.search.brave.com/cyYttep06R6JkK3KDcsVm0-19wb3ajcMTl2SVumk5gM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/Y25ldC5jb20vYS9p/bWcvcmVzaXplLzg4/MGM2ZWZhYTNlYjky/NDIyZjE2YzAzYTlm/Mzc0ZGI0NDhkODY5/YTAvaHViLzIwMjIv/MDMvMjQvNDU2NGZj/YWUtZTQzZi00NjJl/LWI0ZjItZDMyNzVl/NzNhOTkxLzIwMjIt/cG9yc2NoZS05MTEt/dHVyYm8tcy0wMDIu/anBnP2F1dG89d2Vi/cCZ3aWR0aD0xMjAw"
+            },
+            {
+                "id": 4,
+                "nome": "Bugatti Chiron",
+                "descricao": "Hypercar com motor W16",
+                "preco": 15000000.0,
+                "imagem": "https://imgs.search.brave.com/NkxxyKmPJbUL35mMLNOX-YF_eADLldUj5e7YqcD0kDc/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jYWNo/ZTQucGFrd2hlZWxz/LmNvbS9zeXN0ZW0v/Y2FyX2dlbmVyYXRp/b25fcGljdHVyZXMv/NjA3Ni9vcmlnaW5h/bC9CdWdhdHRpX2No/aXJvbi5qcGc_MTYz/OTc0MDc2NQ"
+            },
+            {
+                "id": 5,
+                "nome": "Aston Martin DBS Superleggera",
+                "descricao": "Grand tourer britânico",
+                "preco": 3000000.0,
+                "imagem": "https://imgs.search.brave.com/tUikKeKOPq4qUeK80XEAZfcEoDm4GwlMsWDlyNXjyS0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zMi1h/dXRvZXNwb3J0ZS5n/bGJpbWcuY29tL0V1/ODN6dC1LRG55Wnd1/QzNqWl9JX2ZORndz/bz0vMHgwOjYyMHg0/MTMvOTg0eDAvc21h/cnQvZmlsdGVyczpz/dHJpcF9pY2MoKS9p/LnMzLmdsYmltZy5j/b20vdjEvQVVUSF9j/ZjlkMDM1YmYyNmI0/NjQ2YjEwNWJkOTU4/ZjMyMDg5ZC9pbnRl/cm5hbF9waG90b3Mv/YnMvMjAyMC9FL2Qv/S053ckhSUWNHaUhj/ZWh2MzdMSUEvMjAx/OS0wNC0yNi1hc3Rv/bi1tYXJ0aW4tZGJz/LXN1cGVybGVnZ2Vy/YS12b2xhbnRlLTEu/anBlZw"
+            },
+            {
+                "id": 6,
+                "nome": "McLaren 720S",
+                "descricao": "Supercarro com design futurista",
+                "preco": 2800000.0,
+                "imagem": "https://imgs.search.brave.com/YC_E9rTIzwux4dfPR78zKXRkvD2qoBBcGlccBvBb1yw/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9xdWF0/cm9yb2Rhcy5hYnJp/bC5jb20uYnIvd3At/Y29udGVudC91cGxv/YWRzLzIwMjIvMDcv/bWNsYXJlbjcyMHMt/Mi5qcGc_cXVhbGl0/eT03MCZzdHJpcD1p/bmZvJnc9MTI4MCZo/PTcyMCZjcm9wPTE"
+            },
+            {
+                "id": 7,
+                "nome": "Rolls-Royce Phantom",
+                "descricao": "Sedã de luxo com acabamento premium",
+                "preco": 4500000.0,
+                "imagem": "https://imgs.search.brave.com/Ytwi2I3RurrHSNbbDIkszPEbW_9mA5fjQOkLT3fDlcE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNDU4/NDYxNTgzL3Bob3Rv/L3JvbGxzLXJveWNl/LXBoYW50b20uanBn/P3M9NjEyeDYxMiZ3/PTAmaz0yMCZjPVpn/ZUJQU19ZQjIyZnpz/VzJ2T3RhWk5abjR3/U3p6bDE1RTRjaFNr/dGZpUVE9"
+            },
+            {
+                "id": 8,
+                "nome": "Bentley Continental GT",
+                "descricao": "Grand tourer com interior de luxo",
+                "preco": 2200000.0,
+                "imagem": "https://imgs.search.brave.com/_FOMo0GIjqyfNRjTP5bXqlCdPW_7qmMSLXvE3QQegX8/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/ZHJpdmVuY2FyZ3Vp/ZGUuY28ubnovbWVk/aWEvbHB3Y29xbWQv/Y29udGktMDExLmpw/Zz9ybW9kZT1tYXgm/d2lkdGg9MTEyMSZo/ZWlnaHQ9ODQx"
+            }
+        ];
+
+        // Função para renderizar os cards
+        function renderizarCards() {
+            const container = document.getElementById('cards-container');
+            container.innerHTML = ''; // Limpa o conteúdo anterior
+            produtos.forEach(produto => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+
+                const imagem = document.createElement('img');
+                imagem.src = produto.imagem;
+                imagem.alt = produto.nome;
+
+                const nome = document.createElement('h3');
+                nome.textContent = produto.nome;
+
+                const preco = document.createElement('p');
+                preco.textContent = `R$ ${produto.preco.toFixed(2)}`;
+
+                card.appendChild(imagem);
+                card.appendChild(nome);
+                card.appendChild(preco);
+                container.appendChild(card);
+            });
+        }
+
+        // Função para renderizar a lista
+        function renderizarLista() {
+            const lista = document.getElementById('lista-produtos');
+            lista.innerHTML = ''; // Limpa o conteúdo anterior
+            produtos.forEach(produto => {
+                const item = document.createElement('li');
+                item.textContent = `${produto.nome} - R$ ${produto.preco.toFixed(2)}`;
+                lista.appendChild(item);
+            });
+        }
+
+        // Funções para alternar entre cards e lista
+        function exibirCards() {
+            document.getElementById('cards-container').style.display = 'grid';
+            document.getElementById('lista-produtos').style.display = 'none';
+            renderizarCards();
+        }
+
+        function exibirLista() {
+            document.getElementById('cards-container').style.display = 'none';
+            document.getElementById('lista-produtos').style.display = 'block';
+            renderizarLista();
+        }
+
+        // Renderizar os cards ao carregar a página
+        document.addEventListener('DOMContentLoaded', exibirCards);
+    </script>
+</body>
+</html>

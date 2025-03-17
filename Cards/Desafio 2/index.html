@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Carros de Luxo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #121212;
+            color: #fff;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2em;
+            color: #e60000;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        li {
+            background: #222;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: 1px solid #e60000;
+            font-size: 1.2em;
+            box-shadow: 0 0 10px rgba(230, 0, 0, 0.5);
+            transition: transform 0.3s ease;
+        }
+        li:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <h1>Lista de Carros de Luxo</h1>
+    <ul id="lista-produtos"></ul>
+
+    <script>
+        const produtos = [
+            { "nome": "Ferrari 488 GTB", "preco": 1200000.0 },
+            { "nome": "Lamborghini Aventador", "preco": 2500000.0 },
+            { "nome": "Porsche 911 Turbo S", "preco": 900000.0 },
+            { "nome": "Bugatti Chiron", "preco": 15000000.0 },
+            { "nome": "Aston Martin DBS Superleggera", "preco": 3000000.0 },
+            { "nome": "McLaren 720S", "preco": 2800000.0 },
+            { "nome": "Rolls-Royce Phantom", "preco": 4500000.0 },
+            { "nome": "Bentley Continental GT", "preco": 2200000.0 }
+        ];
+
+        const lista = document.getElementById("lista-produtos");
+        
+        produtos.forEach(produto => {
+            const item = document.createElement("li");
+            item.textContent = `${produto.nome} - R$ ${produto.preco.toFixed(2)}`;
+            lista.appendChild(item);
+        });
+    </script>
+</body>
+</html>
